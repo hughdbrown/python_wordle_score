@@ -38,14 +38,15 @@ def wordle_score_n(correct, guess):
     for i, c in enumerate(correct):
         corr[c].add(i)
 
-    # Find the matches between correct and guess, remove index from corr
-    for c, indexes in list(corr.items()):
+    # Find the matches between `correct` and `guess`, remove index from corr
+    # `corr` is not mutated in loop, so no need to take copy of `corr.items()`
+    for c, indexes in corr.items():
+        # Need to take a copy of `indexes` by casting to list
+        # Otherwise, it is not safe to mutate `indexes` in the loop
         for i in list(indexes):
             if c == guess[i]:
                 result[i] = 'X'
                 indexes.remove(i)
-                if not indexes:
-                    del corr[c]
 
     for i, (rc, gc) in enumerate(zip(result, guess)):
         if rc == '.' and (s := corr.get(gc)):
